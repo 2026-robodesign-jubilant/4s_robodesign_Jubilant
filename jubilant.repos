@@ -1,0 +1,23 @@
+# チーム Jubilant の全リポジトリ。ワークスペースのルートで次を実行すると src/ に全部そろう:
+#   vcs import src < src/jubilant/jubilant.repos
+# 自分のリポジトリを作ったら、ここに 1 項目足して PR を出す。
+repositories:
+  # OCR 班（葛西）：ArUco で紙を補正 → Claude → VOICEVOX で読み上げ
+  ocr:
+    type: git
+    url: https://github.com/2026-robodesign-jubilant/ocr.git
+    version: main
+  # はんこ：2024 P班 crane_x7_stamp の ROS 2 Jazzy 版
+  crane_x7_stamp:
+    type: git
+    url: https://github.com/2026-robodesign-jubilant/stamp.git
+    version: main
+  # CRANE-X7 本体（rt-net 公式、Jazzy）
+  crane_x7_ros:
+    type: git
+    url: https://github.com/rt-net/crane_x7_ros.git
+    version: jazzy
+  crane_x7_description:
+    type: git
+    url: https://github.com/rt-net/crane_x7_description.git
+    version: jazzy
