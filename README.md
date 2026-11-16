@@ -1,52 +1,65 @@
-# 4s_robodesign_jubilant
+# 4s_robodesign_Jubilant
 
-2026 ロボットデザイン チーム Jubilant のリポジトリ。
+2026 ロボット設計製作論 チーム Jubilant の**統合リポジトリ**です。
+コードは機能ごとに別のリポジトリに分け、このリポジトリには「全部をそろえるための一覧（[`jubilant.repos`](jubilant.repos)）」と、チーム全体の説明を置きます。
 
-D435（RGB-D カメラ）を取り付けたロボットアームで、**四隅に ArUco マーカーが印刷された紙**を検出し、
-その紙に書かれた**海外の文書（英語）を OCR で読み取り、Claude で日本語に翻訳・要約して、VOICEVOX で読み上げる**ことを目指すプロジェクトです。
+CRANE-X7 に D435i を付け、**四隅に ArUco マーカーを印刷した紙**を見つけて、書かれた英語の文書を Claude で日本語にして VOICEVOX で読み上げ、紙の欄にはんこを押すことを目指しています。
 
-```
-カメラ（D435i）→ ArUco で紙を正対補正 → OCR → Claude で翻訳・要約 → VOICEVOX で音声 → スピーカー
-```
+## リポジトリ一覧
 
-## チーム分担とディレクトリ構成
+すべて Organization [2026-robodesign-jubilant](https://github.com/2026-robodesign-jubilant) にあります。
 
-機能ごとに ROS 2 パッケージを分け、各自が自分のパッケージの中だけを担当します。
-こうすると別々のフォルダを触るので、**お互いの変更がぶつかりにくく**なります。
-
-| パッケージ（`src/` 配下） | 担当 | 役割 |
+| リポジトリ | 担当 | 内容 |
 |---|---|---|
-| `aruco_detector` | ArUco 班 | 紙の四隅の ArUco を検出し、紙の位置・姿勢を出す |
-| `ocr_recognizer` | OCR 班 | 紙の英語の文字を読み取る（詳細 → [`src/ocr_recognizer/README.md`](src/ocr_recognizer/README.md)）|
-| `ocr_ai` | OCR 班 | 読み取った文字を Claude で日本語の読み上げ文にする（詳細 → [`src/ocr_ai/README.md`](src/ocr_ai/README.md)）|
-| `ocr_voicevox` | OCR 班 | VOICEVOX で音声を作る実験（詳細 → [`src/ocr_voicevox/README.md`](src/ocr_voicevox/README.md)）|
-| `arm_control` | アーム班 | アームの軌道生成・ロボットの動作 |
-| `msg_interfaces` | 共通 | 班どうしで受け渡すメッセージ型（`.msg`）の置き場 |
-| `bringup` | 共通 | 全部をまとめて起動する launch ファイル（最後の「合体」用）|
+| [ocr](https://github.com/2026-robodesign-jubilant/ocr) | 葛西 | ArUco で紙を真上から見た画像に補正 → Claude で日本語の要点 → VOICEVOX で読み上げ（`ocr_recognizer` ほか） |
+| [stamp](https://github.com/2026-robodesign-jubilant/stamp) | はんこ担当 | CRANE-X7 で指定した座標にはんこを押す（2024 P班 `crane_x7_stamp` の Jazzy 版） |
+| （作成予定） | 近藤 | 眠気とうなずき。いまはこのリポジトリの `feat/crane-x7-drowsiness` ブランチ |
+| （作成予定） | 山本 | 紙の追従 |
+| （作成予定） | 山田 | ライト |
+| このリポジトリ | 全員 | `jubilant.repos`、チーム全体の説明。全体を起動する launch と、班どうしで受け渡す `.msg` もここに置く予定 |
 
-> カメラ固定パーツ（ハードウェア設計）は CAD ファイルが大きいので、このリポジトリとは別で管理します。
+CRANE-X7 本体は rt-net 公式の [crane_x7_ros](https://github.com/rt-net/crane_x7_ros) と [crane_x7_description](https://github.com/rt-net/crane_x7_description)（どちらも `jazzy` ブランチ）を `jubilant.repos` から取ってきます。自分のリポジトリにコピーして入れないでください（同じパッケージが 2 つあると colcon がビルドを止めます）。
 
 ## 開発環境
 
-- Ubuntu / Pop!_OS + **ROS 2 Jazzy**
-- `git`, Python 3.12
-- Rust（OCR 班の `src/ocr_ai/claude_rs` を動かす人だけ。`rustup` で入れる）
+- Ubuntu 24.04（Pop!_OS 可）＋ **ROS 2 Jazzy**
+- `git`、`python3-vcstool`（`vcs` コマンド。無ければ `sudo apt install python3-vcstool`）
 
-## はじめに：リポジトリを手元に持ってくる（最初の 1 回だけ）
+## はじめに：全員分のコードを手元にそろえる（最初の 1 回だけ）
 
-「クローン(clone)」= GitHub 上のリポジトリを自分の PC にコピーすること。
+ワークスペース `~/ros2/jubilant_ws` を作り、このリポジトリを `src/jubilant` に clone してから、一覧にあるリポジトリをまとめて取ってきます。
 
 ```bash
-cd ~/github                 # 置きたい場所へ（どこでもよい）
-git clone https://github.com/ReBot-dev/4s_robodesign_Jubilant.git 4s_robodesign_jubilant
-cd 4s_robodesign_jubilant
+mkdir -p ~/ros2/jubilant_ws/src && cd ~/ros2/jubilant_ws
+git clone https://github.com/2026-robodesign-jubilant/4s_robodesign_Jubilant.git src/jubilant
+vcs import src < src/jubilant/jubilant.repos   # 一覧のリポジトリを src/ に全部 clone する
+source /opt/ros/jazzy/setup.bash
+rosdep install -r -y -i --from-paths src --rosdistro jazzy   # 足りない ROS のパッケージを入れる（sudo のパスワードを聞かれる）
+colcon build --symlink-install
+source install/setup.bash
 ```
+
+- **全部を最新にする**：`vcs pull src`
+- **どこに未コミットの変更があるか見る**：`vcs status src`
+- 1 つのリポジトリだけ使いたいときは、そのリポジトリだけを `src/` に clone すれば動きます（使い方は各リポジトリの README）。
 
 初めて git を使う人は、最初に名前とメールを設定しておきます（コミットに記録されます）。
 
 ```bash
 git config --global user.name  "あなたの名前"
 git config --global user.email "あなたのメール"
+```
+
+## 自分のリポジトリを作ったら
+
+1. Organization の中に作る（https://github.com/organizations/2026-robodesign-jubilant/repositories/new）
+2. このリポジトリの `jubilant.repos` に 1 項目足し、上の「リポジトリ一覧」の行を書き換えて PR を出す
+
+```yaml
+  リポジトリの名前:
+    type: git
+    url: https://github.com/2026-robodesign-jubilant/リポジトリの名前.git
+    version: main
 ```
 
 ## 毎回の開発の流れ（GitHub 初心者向け・ここが一番大事）
@@ -59,15 +72,15 @@ git config --global user.email "あなたのメール"
 git checkout main
 git pull
 
-# 2. 作業用ブランチを main から切る（名前は 担当/内容 が分かりやすい）
-git checkout -b ocr/easyocr-test
+# 2. 作業用ブランチを main から切る（名前は 種類/内容 が分かりやすい）
+git checkout -b feat/my-change
 
 # 3. ファイルを編集したら、変更を記録(commit)する
-git add <変更したファイル>        # 例: git add src/ocr_recognizer/
+git add <変更したファイル>        # 例: git add ocr_recognizer/
 git commit -m "何をしたかの説明"
 
 # 4. GitHub に自分のブランチを上げる(push)
-git push -u origin ocr/easyocr-test
+git push -u origin feat/my-change
 ```
 
 5. ブラウザで GitHub のリポジトリを開くと「Compare & pull request」ボタンが出るので、
@@ -78,22 +91,9 @@ git push -u origin ocr/easyocr-test
 - **push** … セーブした変更を GitHub に送ること
 - **Pull Request (PR)** … 「この変更を main に入れていい？」とチームに出す提案
 
-## ビルドと実行（ROS 2 / colcon）
-
-各パッケージの中身が揃ったら、リポジトリのルートでビルドします。
-
-```bash
-cd ~/github/4s_robodesign_jubilant
-colcon build
-source install/setup.bash
-```
-
-> まだ各パッケージの中身を作っている段階です。自分のフォルダを ROS 2 パッケージにするには、
-> `src/` の中で `ros2 pkg create <パッケージ名> --build-type ament_python`（Python の場合）を使います。
-
 ## コミットしてはいけないもの（設定済み）
 
-次のものは `.gitignore` で除外済みなので、`git add` しても上がりません（上げると壊れる・肥大するため）。
+次のものは `.gitignore` で除外済みなので、`git add` しても上がりません（各リポジトリにも同じ設定を入れてください）（上げると壊れる・肥大するため）。
 
 - `build/` `install/` `log/` … colcon が自動生成する
 - `.venv/` `__pycache__/` … Python の仮想環境・中間ファイル
