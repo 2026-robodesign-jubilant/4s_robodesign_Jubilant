@@ -11,11 +11,11 @@ CRANE-X7 に D435i を付け、**四隅に ArUco マーカーを印刷した紙*
 
 | リポジトリ | 担当 | 内容 |
 |---|---|---|
-| [ocr](https://github.com/2026-robodesign-jubilant/ocr) | 葛西 | ArUco で紙を真上から見た画像に補正 → Claude で日本語の要点 → VOICEVOX で読み上げ（`ocr_recognizer` ほか） |
+| [ocr](https://github.com/2026-robodesign-jubilant/ocr) | OCR 班 | ArUco で紙を真上から見た画像に補正 → Claude で日本語の要点 → VOICEVOX で読み上げ（`ocr_recognizer` ほか） |
 | [stamp](https://github.com/2026-robodesign-jubilant/stamp) | はんこ担当 | CRANE-X7 で指定した座標にはんこを押す（2024 P班 `crane_x7_stamp` の Jazzy 版） |
-| （作成予定） | 近藤 | 眠気とうなずき。いまはこのリポジトリの `feat/crane-x7-drowsiness` ブランチ |
-| （作成予定） | 山本 | 紙の追従 |
-| （作成予定） | 山田 | ライト |
+| （作成予定） | 眠気班 | 眠気とうなずき。いまはこのリポジトリの `feat/crane-x7-drowsiness` ブランチ |
+| （作成予定） | 追従班 | 紙の追従 |
+| （作成予定） | ライト班 | ライト |
 | このリポジトリ | 全員 | `jubilant.repos`、チーム全体の説明。全体を起動する launch と、班どうしで受け渡す `.msg` もここに置く予定 |
 
 CRANE-X7 本体は rt-net 公式の [crane_x7_ros](https://github.com/rt-net/crane_x7_ros) と [crane_x7_description](https://github.com/rt-net/crane_x7_description)（どちらも `jazzy` ブランチ）を `jubilant.repos` から取ってきます。自分のリポジトリにコピーして入れないでください（同じパッケージが 2 つあると colcon がビルドを止めます）。
